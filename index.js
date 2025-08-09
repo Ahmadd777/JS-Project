@@ -51,7 +51,7 @@ let users = [
             email: "aegontargaryen@gmail.com",
             contactInfo: "Hello my name is Aegon",
             img: "Aegon",
-            age: 31,
+            age: 63,
             country: "Westeros",
       },
 ];
@@ -369,4 +369,5 @@ document.querySelectorAll("li").forEach(function (li) {
       li.addEventListener("mouseout", function () {
             this.classList.remove("hovered");
       });
+
 });
