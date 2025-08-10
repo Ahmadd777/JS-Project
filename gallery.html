@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Image Gallery</title>
+      <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+      <section class="gallery">
+            <h2>IMAGES</h2>
+
+            <a href="index.html" class="home-icon">
+                  <img src="./imgs/home.jpg" alt="Home" />
+            </a>
+
+            <div class="gallery-wrap">
+                  <div class="gallery-main">
+                        <img id="mainImage" src="imgs/pic1.jpg" alt="main" />
+                  </div>
+
+                  <div class="gallery-thumbs" id="thumbs">
+                        <img src="imgs/pic1.jpg" data-full="imgs/pic1.jpg" class="thumb active" alt="">
+                        <img src="imgs/pic2.jpg" data-full="imgs/pic2.jpg" class="thumb" alt="">
+                        <img src="imgs/pic3.jpg" data-full="imgs/pic3.jpg" class="thumb" alt="">
+                        <img src="imgs/pic4.jpg" data-full="imgs/pic4.jpg" class="thumb" alt="">
+                        <img src="imgs/pic5.jpg" data-full="imgs/pic5.jpg" class="thumb" alt="">
+                  </div>
+            </div>
+      </section>
+
+      <script>
+            const mainImage = document.getElementById('mainImage');
+            const thumbs = document.querySelectorAll('.gallery .thumb');
+
+            thumbs.forEach(t => {
+                  t.addEventListener('click', () => {
+                        mainImage.src = t.dataset.full || t.src;
+                        thumbs.forEach(x => x.classList.remove('active'));
+                        t.classList.add('active');
+                  });
+            });
+      </script>
+
+</body>
+
+</html>
