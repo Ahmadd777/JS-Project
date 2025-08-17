@@ -1,10 +1,10 @@
 "use strict";
 
-/* ===== DOM ===== */
+// בחירה באלמנטים מה־DOM
 const search = document.querySelector(".search-bar");
 const ul = document.getElementById("phone-list");
 
-/* ===== بيانات مبدئية ===== */
+// נתוני דמו התחלתיים
 let users = [
   {
     id: "1",
@@ -58,24 +58,20 @@ let users = [
   },
 ];
 
-/* ===== Utilities (تطبيع) ===== */
+// פונקציות עזר לניקוי קלט
 const cleanName = (s) =>
-  String(s || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-const titleCase = (s) =>
-  cleanName(s).replace(/\b\w/g, (c) => c.toUpperCase());
+  String(s || "").trim().toLowerCase().replace(/\s+/g, " ");
+const titleCase = (s) => cleanName(s).replace(/\b\w/g, (c) => c.toUpperCase());
 const cleanPhone = (s) => String(s || "").replace(/\D/g, "");
 
-/* نظّف البيانات المبدئية (يشيل مسافات ويثبّت أرقام) */
+// נירמול מידע התחלתי
 users = users.map((u) => ({
   ...u,
   name: titleCase(u.name),
   phone: cleanPhone(u.phone),
 }));
 
-/* ===== Render & Sort ===== */
+// מיון והצגה מחדש של הרשימה
 function sortAdd() {
   ul.innerHTML = "";
   users.sort((a, b) => cleanName(a.name).localeCompare(cleanName(b.name)));
@@ -83,11 +79,11 @@ function sortAdd() {
   document.getElementById("users-length").innerText = `${users.length} People`;
 }
 
-/* عنصر مستخدم واحد في القائمة */
+// יצירת פריט <li> אחד לרשימת אנשי קשר
 function getUser(user) {
   const liItem = document.createElement("li");
   liItem.classList.add("flex");
-  liItem.classList.add(user.id); // نستخدمه للوصول السريع
+  liItem.classList.add(user.id);
   liItem.innerHTML = `
     <div class="flex">
       <img class="profile" src="./imgs/${user.img}.jpg" alt="user pfp placeholder" />
@@ -109,25 +105,25 @@ function getUser(user) {
   ul.appendChild(liItem);
 }
 
-/* ===== بحث ===== */
+// חיפוש לפי שם
 search.addEventListener("input", (e) => {
   const q = cleanName(e.target.value);
-  const filteredList = users.filter((u) =>
-    cleanName(u.name).includes(q)
-  );
+  const filteredList = users.filter((u) => cleanName(u.name).includes(q));
   ul.innerHTML = "";
   filteredList.forEach((user) => getUser(user));
 });
 
-/* ===== Modal ===== */
+// פתיחת מודאל
 function openModal() {
   document.getElementById("myModal").style.display = "flex";
 }
+
+// סגירת מודאל
 function closeModal() {
   document.getElementById("myModal").style.display = "none";
 }
 
-/* عرض معلومات الاتصال */
+// הצגת פרטי איש קשר במודאל
 function showContact(contactId) {
   openModal();
   const div = document.getElementById("modal-content");
@@ -146,12 +142,11 @@ function showContact(contactId) {
   `;
 }
 
-/* تعديل */
+// פתיחת מודאל עריכה
 function editContact(contactId) {
   openModal();
   const div = document.getElementById("modal-content");
   const user = users.find((u) => u.id === contactId);
-
   div.innerHTML = `
     <form class="edit-form">
       <h2>Edit Contact ${user.name}</h2>
@@ -189,7 +184,7 @@ function editContact(contactId) {
   `;
 }
 
-/* حفظ التعديل */
+// שמירת עריכה עם בדיקת כפילות
 function saveContact(contactId) {
   const user = users.find((u) => u.id === contactId);
 
@@ -201,7 +196,7 @@ function saveContact(contactId) {
   const newText = document.getElementById("text").value.trim();
   const newImg = document.getElementById("image").value.trim();
 
-  // امنع تكرار (مع استثناء العنصر نفسه)
+  // מניעת כפילות מול רשומות אחרות
   const duplicate = users.some(
     (u) =>
       u.id !== contactId &&
@@ -213,6 +208,7 @@ function saveContact(contactId) {
     return;
   }
 
+  // עדכון נתוני איש הקשר
   user.name = newName;
   user.phone = newPhone;
   user.email = newEmail;
@@ -221,12 +217,12 @@ function saveContact(contactId) {
   user.contactInfo = newText;
   user.img = newImg;
 
-  // أعد الرسم والترتيب
+  // רענון תצוגה
   sortAdd();
   closeModal();
 }
 
-/* حذف الكل */
+// מחיקת כל אנשי הקשר
 function deleteContacts() {
   if (confirm("Are you sure you want to delete all contacts?")) {
     users = [];
@@ -236,12 +232,11 @@ function deleteContacts() {
   }
 }
 
-/* إضافة جديد (يفتح نموذج) */
+// פתיחת מודאל הוספה
 function addNewUser(e) {
   e.preventDefault();
   openModal();
   const div = document.getElementById("modal-content");
-
   div.innerHTML = `
     <form class="edit-form">
       <h2>Add New Contact</h2>
@@ -279,7 +274,7 @@ function addNewUser(e) {
   `;
 }
 
-/* حفظ الجديد */
+// שמירת איש קשר חדש עם בדיקת כפילות
 function saveNewContact() {
   const name = titleCase(document.getElementById("name").value);
   const number = cleanPhone(document.getElementById("number").value);
@@ -289,7 +284,7 @@ function saveNewContact() {
   const text = document.getElementById("text").value.trim();
   const image = document.getElementById("image").value.trim();
 
-  // فحص تكرار
+  // מניעת כפילות לפי שם או טלפון
   const duplicate = users.some(
     (u) =>
       cleanName(u.name) === cleanName(name) ||
@@ -300,11 +295,13 @@ function saveNewContact() {
     return;
   }
 
+  // יצירת מזהה חדש
   const newId =
     typeof crypto !== "undefined" && crypto.randomUUID
       ? crypto.randomUUID()
       : String(Date.now());
 
+  // הוספה למערך
   const newUser = {
     id: newId,
     name,
@@ -315,13 +312,14 @@ function saveNewContact() {
     contactInfo: text,
     img: image,
   };
-
   users.push(newUser);
+
+  // רענון תצוגה
   sortAdd();
   closeModal();
 }
 
-/* حذف عنصر محدد */
+// מחיקת איש קשר יחיד
 function deleteContact(contactId) {
   if (confirm("Are you sure you want to delete this contact?")) {
     users = users.filter((u) => u.id !== contactId);
@@ -332,7 +330,7 @@ function deleteContact(contactId) {
   }
 }
 
-/* Dark mode */
+// מצב כהה ואפקט רקע
 let darked = false;
 let effect = false;
 function darkModetoggle() {
@@ -344,7 +342,7 @@ function coolEffect() {
   effect = !effect;
 }
 
-/* فحص وجود (مُطبَّع) */
+// בדיקות קיום לפי שם/טלפון
 function checkIfExists(name) {
   const n = cleanName(name);
   return users.some((u) => cleanName(u.name) === n);
@@ -354,7 +352,7 @@ function checkIfNumberExists(number) {
   return users.some((u) => cleanPhone(u.phone) === p);
 }
 
-/* Hover (تفويض أحداث حتى يعمل على العناصر الجديدة) */
+// האזנות hover לרשימה
 ul.addEventListener("mouseover", (e) => {
   const li = e.target.closest("li");
   if (li) li.classList.add("hovered");
@@ -364,5 +362,5 @@ ul.addEventListener("mouseout", (e) => {
   if (li) li.classList.remove("hovered");
 });
 
-/* بدء التشغيل */
+// אתחול ראשוני
 sortAdd();
